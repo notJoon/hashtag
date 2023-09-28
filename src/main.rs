@@ -1,8 +1,10 @@
 use std::process;
 
 use clap::Parser;
+// use hashtag::Tagging;
 
 #[derive(Debug, Parser)]
+#[command(author, version, name = "hashtag", about = "Run tests with tags")]
 struct Hashtag {
     #[clap(short, long = "tag", help = "Specify a tag to run the test")]
     #[arg(num_args(0..))]
@@ -61,5 +63,10 @@ mod cli_tests {
             prog.tags,
             Some(vec!["test".to_string(), "test2".to_string()])
         );
+    }
+
+    #[test]
+    fn test_hashtag_attribute() {
+        
     }
 }

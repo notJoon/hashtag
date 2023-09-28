@@ -1,14 +1,24 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+// ref: https://earthly.dev/blog/rust-macros/
+
+use proc_macro::TokenStream;
+use quote::quote;
+use syn::{parse_macro_input, ItemFn};
+
+mod test;
+
+#[proc_macro_attribute]
+pub fn hashtag(_attr: TokenStream, input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as ItemFn);
+    println!("input: {:?}", input.sig.ident);
+    println!("args: {:?}", _attr.to_string());
+    TokenStream::from(quote!(#input))
 }
 
 #[cfg(test)]
-mod tests {
+mod attribute_macro_tests {
     use super::*;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    fn parse_attributes<S: AsRef<&str>>(attr: S) {
+        todo!()
     }
 }
