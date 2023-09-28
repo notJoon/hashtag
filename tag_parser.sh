@@ -3,6 +3,8 @@
 # store all arguments in an array
 TAGS=("$@")
 
+# echo "Running tests with tags: ${TAGS[@]}"
+
 # run search for each tag, store matching test names in array
 declare -A TESTS_MAP
 for tag in "${TAGS[@]}"; do
