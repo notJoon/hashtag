@@ -1,7 +1,7 @@
 use std::process;
 
 use clap::Parser;
-// use hashtag::Tagging;
+use hashtag_macros::hashtag;
 
 #[derive(Debug, Parser)]
 #[command(author, version, name = "hashtag", about = "Run tests with tags")]
@@ -37,6 +37,17 @@ fn run_tagged_test(tags: Vec<String>) {
     });
 }
 
+#[hashtag("foo")]
+fn foo() {
+    println!("foo");
+}
+
+#[hashtag("foo", "bar")]
+fn another_foo() {
+    println!("another foo");
+}
+
+
 #[cfg(test)]
 mod cli_tests {
     use super::*;
@@ -63,10 +74,5 @@ mod cli_tests {
             prog.tags,
             Some(vec!["test".to_string(), "test2".to_string()])
         );
-    }
-
-    #[test]
-    fn test_hashtag_attribute() {
-        
     }
 }
