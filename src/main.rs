@@ -37,16 +37,15 @@ fn run_tagged_test(tags: Vec<String>) {
     });
 }
 
-#[hashtag("foo")]
-fn foo() {
-    println!("foo");
-}
+// #[hashtag("foo")]
+// fn foo() {
+//     println!("foo");
+// }
 
-#[hashtag("foo", "bar")]
-fn another_foo() {
-    println!("another foo");
-}
-
+// #[hashtag("some long tag")]
+// fn another_foo() {
+//     println!("another foo");
+// }
 
 #[cfg(test)]
 mod cli_tests {
