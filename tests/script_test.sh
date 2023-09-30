@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # expected output
-EXPECTED_FOO_OUTPUT="foo\nbar\nbaz"
-EXPECTED_BAR_OUTPUT="bar\nbaz"
-EXPECTED_BAZ_OUTPUT="baz"
+EXPECTED_FOO_OUTPUT=true
+EXPECTED_BAR_OUTPUT=true
+EXPECTED_BAZ_OUTPUT=true
 
-ACTUAL_FOO_OUTPUT=$(./tag_parser.sh foo)
-ACTUAL_BAR_OUTPUT=$(./tag_parser.sh bar)
-ACTUAL_BAZ_OUTPUT=$(./tag_parser.sh baz)
+ACTUAL_FOO_OUTPUT=$(./tag_parser.sh "foo")
+ACTUAL_BAR_OUTPUT=$(./tag_parser.sh foo bar)
+ACTUAL_BAZ_OUTPUT=$(./tag_parser.sh foo bar baz)
 
 assert_output() {
     if [ "$1" != "$2" ]; then

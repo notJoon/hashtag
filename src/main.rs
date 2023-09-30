@@ -1,7 +1,6 @@
 use std::process;
 
 use clap::Parser;
-use hashtag_macros::hashtag;
 
 #[derive(Debug, Parser)]
 #[command(author, version, name = "hashtag", about = "Run tests with tags")]
@@ -13,7 +12,6 @@ struct Hashtag {
 
 fn main() {
     let prog = Hashtag::parse();
-
     match prog.tags {
         Some(tags) => run_tagged_test(tags),
         None => run_cargo_test(),
@@ -37,33 +35,19 @@ fn run_tagged_test(tags: Vec<String>) {
     });
 }
 
-// #[hashtag("foo")]
-// fn foo() {
-//     println!("foo");
-// }
-
-// #[hashtag("some long tag")]
-// fn another_foo() {
-//     println!("another foo");
-// }
-
 #[cfg(test)]
 mod cli_tests {
     use super::*;
+    use hashtag_macros::hashtag;
 
     #[test]
+    #[hashtag("input")]
     fn test_check_input() {
         let prog = Hashtag::parse_from(&["hashtag", "-t"]);
-        assert_eq!(
-            prog.tags,
-            Some(vec![])
-        );
+        assert_eq!(prog.tags, Some(vec![]));
 
         let prog = Hashtag::parse_from(&["hashtag", "-t", "test"]);
-        assert_eq!(
-            prog.tags,
-            Some(vec!["test".to_string()])
-        );
+        assert_eq!(prog.tags, Some(vec!["test".to_string()]));
     }
 
     #[test]

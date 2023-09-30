@@ -1,16 +1,22 @@
-use hashtag_macros::hashtag;
+#[cfg(test)]
+mod dummy_tests {
+    use hashtag_macros::hashtag;
 
-#[hashtag("foo")]
-fn foo() {
-    println!("foo");
-}
+    #[test]
+    #[hashtag("foo")]
+    fn foo() {
+        assert!(true)
+    }
 
-#[hashtag("foo", "bar")]
-fn bar() {
-    println!("bar");
-}
+    #[test]
+    #[hashtag("foo", "bar")]
+    fn bar() {
+        assert!(true)
+    }
 
-#[hashtag("foo", "bar", "baz")]
-fn baz() {
-    println!("baz");
+    #[test]
+    #[hashtag("foo", "bar", "baz")]
+    fn baz() {
+        assert!(true)
+    }
 }
