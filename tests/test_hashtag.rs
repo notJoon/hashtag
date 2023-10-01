@@ -9,14 +9,20 @@ mod dummy_tests {
     }
 
     #[test]
-    #[hashtag("foo", "bar")]
-    fn bar() {
+    #[hashtag("foo")]
+    fn bar1() {
         assert!(true)
     }
 
     #[test]
-    #[hashtag("foo", "bar", "baz")]
+    #[hashtag("tag_bar")]
     fn baz() {
+        assert!(true)
+    }
+
+    #[test]
+    #[hashtag("some_long_tag_name")]
+    fn test_long_tag_name() {
         assert!(true)
     }
 }

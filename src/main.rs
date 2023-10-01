@@ -13,7 +13,10 @@ struct Hashtag {
 fn main() {
     let prog = Hashtag::parse();
     match prog.tags {
-        Some(tags) => run_tagged_test(tags),
+        Some(tags) => {
+            get_tagged_test_name(tags);
+            println!("Ok");
+        },
         None => run_cargo_test(),
     }
 }
@@ -25,14 +28,15 @@ fn run_cargo_test() {
         .expect("failed to execute process");
 }
 
-fn run_tagged_test(tags: Vec<String>) {
+fn get_tagged_test_name(tags: Vec<String>) {
     tags.iter().for_each(|tag| {
         process::Command::new("bash")
-            .arg("-c")
-            .arg(format!("./tag_parser.sh {:?}", tag))
-            .output()
+            .arg("-C")
+            .arg("./tag_parser.sh")
+            .arg(tag)
+            .status()
             .expect("failed to execute process");
-    });
+    })
 }
 
 #[cfg(test)]
