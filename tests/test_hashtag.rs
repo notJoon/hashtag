@@ -9,7 +9,7 @@ mod dummy_tests {
     }
 
     #[test]
-    #[hashtag("foo")]
+    #[hashtag("bar", "foo")]
     fn bar1() {
         assert!(true)
     }
@@ -21,7 +21,7 @@ mod dummy_tests {
     }
 
     #[test]
-    #[hashtag("some_long_tag_name")]
+    #[hashtag("some_long_tag_name", "another_long_tag_name", "foo")]
     fn test_long_tag_name() {
         assert!(true)
     }

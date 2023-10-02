@@ -10,8 +10,7 @@ declare -a TESTS_MAP_VALUES
 
 # run search for each tag, store matching test names in array
 for tag in "${TAGS[@]}"; do
-    # FIX: current regex does not match tests with multiple tags
-    FOUND_TESTS=$(grep -E "^\s*#\[hashtag\(\"$tag\"\)\]" -A 1 ./tests/*.rs ./src/*.rs)
+    FOUND_TESTS=$(grep -E "^\s*#\[hashtag\((?:\"[a-zA-Z0-9_]*\"(?:\,\s*)?)*\"$tag\"(?:\,\s*)?(?:\"[a-zA-Z0-9_]*\"(?:\,\s*)?)*\)\]" -A 1 ./tests/*.rs ./src/*.rs)
 
     # Process each found test
     IFS=$'\n' # set Internal Field Separator to newline for the loop
