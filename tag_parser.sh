@@ -7,10 +7,19 @@ TAGS=("$@")
 declare -a TESTS_MAP_KEYS
 declare -a TESTS_MAP_VALUES
 
+# How many lines can be skipped to find the function identifier (`fn`) in a macro
+SKIPPING_LINES=15
+
 # run search for each tag, store matching test names in array
 for tag in "${TAGS[@]}"; do
-    FOUND_TESTS=$(grep -E "^\s*#\[hashtag\((?:\"[a-zA-Z0-9_]*\"(?:\,\s*)?)*\"$tag\"(?:\,\s*)?(?:\"[a-zA-Z0-9_]*\"(?:\,\s*)?)*\)\]" -A 1 ./tests/*.rs ./src/*.rs)
-
+    # Search for test functions with the specified tag in the source directory (especially in the tests directory)
+    #
+    # I used the `-A` option of the grep command to have it print up to specified(`SKIPPING_LINES`) lines after the matched line, 
+    # and awk sets the flag when it finds the #[hashtag(...)] macro, 
+    # and then prints and unflags the next occurrence of the fn keyword.
+    #
+    # To do so, This will find out the `#[hashtag(...)]` macro and the function identifier that follows it.
+    FOUND_TESTS=$(grep -E "^\s*#\[hashtag\((?:\"[a-zA-Z0-9_]*\"(?:\,\s*)?)*\"$tag\"(?:\,\s*)?(?:\"[a-zA-Z0-9_]*\"(?:\,\s*)?)*\)\]" -A $SKIPPING_LINES ./tests/*.rs ./src/*.rs | awk '/#\[hashtag\(/ {flag=1; next} flag && /fn / {print; flag=0}')
     # Process each found test
     IFS=$'\n' # set Internal Field Separator to newline for the loop
     for line in $FOUND_TESTS; do
@@ -49,6 +58,7 @@ if [ ${#TESTS_MAP_KEYS[@]} -eq 0 ]; then
     exit 1
 fi
 
+# run cargo command for each test
 for test in "${!TESTS_MAP_KEYS[@]}"; do
     if [ ${TESTS_MAP_VALUES[$test]} -eq ${#TAGS[@]} ]; then
         cargo test ${TESTS_MAP_KEYS[$test]}

@@ -2,14 +2,21 @@
 mod dummy_tests {
     use hashtag_macros::hashtag;
 
-    #[test]
     #[hashtag("foo", "another_name")]
+    #[test]
+    #[should_panic]
+    // some comment
+    // another comment
+    // 1
+    // 2
+
+    // 3
     fn foo() {
-        assert!(true)
+        assert!(false)
     }
 
     #[test]
-    #[hashtag("bar", "foo")]
+    #[hashtag("bar")]
     fn bar1() {
         assert!(true)
     }
@@ -21,7 +28,7 @@ mod dummy_tests {
     }
 
     #[test]
-    #[hashtag("some_long_tag_name", "another_long_tag_name", "foo")]
+    #[hashtag("some_long_tag_name", "another_long_tag_name")]
     fn test_long_tag_name() {
         assert!(true)
     }
