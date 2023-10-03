@@ -3,7 +3,7 @@ mod dummy_tests {
     use hashtag_macros::hashtag;
 
     #[test]
-    #[hashtag("foo")]
+    #[hashtag("foo", "another_name")]
     fn foo() {
         assert!(true)
     }

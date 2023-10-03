@@ -2,7 +2,6 @@
 
 # store all arguments in an array
 TAGS=("$@")
-echo "TAGS: ${TAGS[@]}"
 
 # Declare two arrays to mimic an associative array
 declare -a TESTS_MAP_KEYS
@@ -44,29 +43,17 @@ for tag in "${TAGS[@]}"; do
     fi
 done
 
-# Display TESTS_MAP
-for i in "${!TESTS_MAP_KEYS[@]}"; do
-    echo "${TESTS_MAP_KEYS[$i]}: ${TESTS_MAP_VALUES[$i]}"
-done
-
 # Check if any tests are selected
 if [ ${#TESTS_MAP_KEYS[@]} -eq 0 ]; then
     echo "No tests selected."
     exit 1
 fi
 
-TEST_NAMES=""
 for test in "${!TESTS_MAP_KEYS[@]}"; do
     if [ ${TESTS_MAP_VALUES[$test]} -eq ${#TAGS[@]} ]; then
-        TEST_NAMES+=" ${TESTS_MAP_KEYS[$test]}"
+        cargo test ${TESTS_MAP_KEYS[$test]}
+    else
+        echo "No tests match all specified tags."
+        exit 1
     fi
 done
-
-echo "TEST_NAMES: $TEST_NAMES"
-
-if [ "$TEST_NAMES" ]; then
-    cargo test -- $TEST_NAMES
-else
-    echo "No tests match all specified tags."
-    exit 1
-fi

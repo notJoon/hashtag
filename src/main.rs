@@ -8,23 +8,29 @@ struct Hashtag {
     #[clap(short, long = "tag", help = "Specify a tag to run the test")]
     #[arg(num_args(0..))]
     tags: Option<Vec<String>>,
+    #[clap(short = 'a', long = "all", help = "Run all tests")]
+    all: bool,
 }
 
 fn main() {
     let prog = Hashtag::parse();
-    match prog.tags {
-        Some(tags) => {
-            get_tagged_test_name(tags);
-            println!("Ok");
-        },
-        None => run_cargo_test(),
+    match prog {
+        Hashtag {
+            tags: None,
+            all: true,
+        } => run_cargo_test(),
+        Hashtag {
+            tags: Some(tags),
+            all: false,
+        } => get_tagged_test_name(tags),
+        _ => println!("No tags specified"),
     }
 }
 
 fn run_cargo_test() {
     process::Command::new("cargo")
         .arg("test")
-        .output()
+        .status()
         .expect("failed to execute process");
 }
 
