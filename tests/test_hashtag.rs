@@ -22,7 +22,7 @@ mod dummy_tests {
     }
 
     #[test]
-    #[hashtag("tag_bar")]
+    #[hashtag("tag_tag_bar")]
     fn baz() {
         assert!(true)
     }

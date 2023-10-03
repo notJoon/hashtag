@@ -1,3 +1,4 @@
+#![doc = "include_str!(\"../README.md\")"]
 // ref: https://earthly.dev/blog/rust-macros/
 
 use proc_macro::TokenStream;
