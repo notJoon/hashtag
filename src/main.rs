@@ -2,6 +2,8 @@ use std::process;
 
 use clap::Parser;
 
+mod file_diff;
+
 #[derive(Debug, Parser)]
 #[command(author, version, name = "hashtag", about = "Run tests with tags")]
 struct Hashtag {
@@ -38,7 +40,7 @@ fn get_tagged_test_name(tags: Vec<String>) {
     tags.iter().for_each(|tag| {
         process::Command::new("bash")
             .arg("-C")
-            .arg("./tag_parser.sh")
+            .arg("script/tag.sh")
             .arg(tag)
             .status()
             .expect("failed to execute process");
