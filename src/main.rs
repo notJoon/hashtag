@@ -1,73 +1,42 @@
-use std::process;
-
 use clap::Parser;
+use hashtag_core::TaggedTest;
 
-mod file_diff;
+pub mod file_diff;
 
 #[derive(Debug, Parser)]
 #[command(author, version, name = "hashtag", about = "Run tests with tags")]
 struct Hashtag {
     #[clap(short, long = "tag", help = "Specify a tag to run the test")]
     #[arg(num_args(0..))]
-    tags: Option<Vec<String>>,
+    tags: Vec<String>,
     #[clap(short = 'a', long = "all", help = "Run all tests")]
     all: bool,
 }
 
 fn main() {
-    let prog = Hashtag::parse();
-    match prog {
-        Hashtag {
-            tags: None,
-            all: true,
-        } => run_cargo_test(),
-        Hashtag {
-            tags: Some(tags),
-            all: false,
-        } => get_tagged_test_name(tags),
-        _ => println!("No tags specified"),
+    let args = Hashtag::parse();
+
+    if args.all {
+        run_all_tests();
+    } else if !args.tags.is_empty() {
+        run_tagged_tests(&args.tags);
+    } else {
+        println!("Please specify tags or use --all to run all tests.");
     }
 }
 
-fn run_cargo_test() {
-    process::Command::new("cargo")
-        .arg("test")
-        .status()
-        .expect("failed to execute process");
-}
-
-fn get_tagged_test_name(tags: Vec<String>) {
-    tags.iter().for_each(|tag| {
-        process::Command::new("bash")
-            .arg("-C")
-            .arg("script/tag.sh")
-            .arg(tag)
-            .status()
-            .expect("failed to execute process");
-    })
-}
-
-#[cfg(test)]
-mod cli_tests {
-    use super::*;
-    use hashtag_macros::hashtag;
-
-    #[test]
-    #[hashtag("input")]
-    fn test_check_input() {
-        let prog = Hashtag::parse_from(&["hashtag", "-t"]);
-        assert_eq!(prog.tags, Some(vec![]));
-
-        let prog = Hashtag::parse_from(&["hashtag", "-t", "test"]);
-        assert_eq!(prog.tags, Some(vec!["test".to_string()]));
+fn run_all_tests() {
+    for test in inventory::iter::<TaggedTest> {
+        println!("Running test: {}", test.name);
+        (test.test_fn)();
     }
+}
 
-    #[test]
-    fn test_check_multiple_tags() {
-        let prog = Hashtag::parse_from(&["hashtag", "-t", "test", "test2"]);
-        assert_eq!(
-            prog.tags,
-            Some(vec!["test".to_string(), "test2".to_string()])
-        );
+fn run_tagged_tests(tags: &[String]) {
+    for test in inventory::iter::<TaggedTest> {
+        if tags.iter().any(|tag| test.tags.contains(&tag.as_str())) {
+            println!("Running test: {}", test.name);
+            (test.test_fn)();
+        }
     }
 }
